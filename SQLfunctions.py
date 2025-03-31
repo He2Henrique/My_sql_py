@@ -52,13 +52,14 @@ class Connection:
         try:
             cursor.execute(
                 f"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{self.database}' AND TABLE_NAME = '{table_name}';")
+            result = cursor.fetchall()
+            print(result)
+            table = Table(table_name)
+            table.columns = [column[0] for column in result]
+            cursor.close()
         except mysql.connector.Error as err:
             print(f"Error: {err}")
-        result = cursor.fetchall()
-        print(result)
-        table = Table(table_name)
-        table.columns = [column[0] for column in result]
-        cursor.close()
+
         return table
     # close the connection to the database
     # fechar a conexão com o banco de dados
